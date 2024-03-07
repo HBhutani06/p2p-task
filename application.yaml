@@ -1,0 +1,85 @@
+# ---
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: go-app
+#   namespace: argocd
+# spec:
+#   project: default
+#   source:
+#     repoURL: git@github.com:sachinvasle99/argocd-test.git
+#     targetRevision: main
+#     path: app
+#     directory:
+#       recurse: true
+#     # helm:
+#     #   releaseName: go-app
+#   destination:
+#     server: https://kubernetes.default.svc
+#     namespace: default
+#   syncPolicy:
+#     syncOptions:
+#     - CreateNamespace=true
+#     automated:
+#       prune: true
+#       selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd
+  namespace: argocd
+spec:
+  project: default
+  source:
+    chart: argo-cd
+    repoURL: https://argoproj.github.io/argo-helm
+    targetRevision: 5.27.3
+    helm:
+      releaseName: argocd
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: python-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:github-admin/argocd-deployment.git
+    targetRevision: main
+    path: go-app
+    helm:
+      releaseName: python-app
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: helm-repo
+  namespace: argocd
+  labels:
+    argocd.argoproj.io/secret-type: repository
+stringData:
+  type: git
+  url: git@github.com:github-admin/argocd-deployment.git
+  sshPrivateKey: |
+    -----BEGIN OPENSSH PRIVATE KEY-----
+    -----END OPENSSH PRIVATE KEY-----      
