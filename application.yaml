@@ -1,28 +1,3 @@
-# ---
-# apiVersion: argoproj.io/v1alpha1
-# kind: Application
-# metadata:
-#   name: go-app
-#   namespace: argocd
-# spec:
-#   project: default
-#   source:
-#     repoURL: git@github.com:sachinvasle99/argocd-test.git
-#     targetRevision: main
-#     path: app
-#     directory:
-#       recurse: true
-#     # helm:
-#     #   releaseName: go-app
-#   destination:
-#     server: https://kubernetes.default.svc
-#     namespace: default
-#   syncPolicy:
-#     syncOptions:
-#     - CreateNamespace=true
-#     automated:
-#       prune: true
-#       selfHeal: true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -50,21 +25,21 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: python-app
-  namespace: argocd
+  name: go-app
+  namespace: production
 spec:
   project: default
   source:
-    repoURL: git@github.com:github-admin/argocd-deployment.git
+    repoURL: git@github.com:HBhutani06/p2p-task.git
     targetRevision: main
-    path: go-app
+    path: go-app-helmchart
     helm:
-      releaseName: python-app
+      releaseName: go-app
   destination:
     server: https://kubernetes.default.svc
     namespace: default
   syncPolicy:
-    syncOptions:
+    syncOptions:`
     - CreateNamespace=true
     automated:
       prune: true
@@ -74,7 +49,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: helm-repo
-  namespace: argocd
+  namespace: production
   labels:
     argocd.argoproj.io/secret-type: repository
 stringData:

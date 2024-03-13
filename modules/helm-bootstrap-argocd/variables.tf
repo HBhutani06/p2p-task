@@ -15,10 +15,10 @@ variable "chart_name" {
 
 }
 variable "chart_repository" {
-  description = "The sealed secrets chart repository"
+  description = "The argo chart repository"
   type        = string
 
-  default = "https://charts.fluxcd.io"
+  default = "https://argoproj.github.io/argo-helm"
 }
 
 variable "argo-version" {
